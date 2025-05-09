@@ -327,14 +327,6 @@ namespace MobilePackageGen
 
         private static string ReformatDestinationPath(string DestinationPath)
         {
-            if (DestinationPath[1] == ':')
-            {
-                string DriveLetter = DestinationPath[0].ToString().ToUpper();
-                string DriveLetterLessPath = DestinationPath[3..];
-
-                DestinationPath = Path.Combine($"Drive{DriveLetter}", DriveLetterLessPath);
-            }
-
             if (DestinationPath.StartsWith(@"\\?\") && DestinationPath[5] == ':')
             {
                 string UNCLessPath = DestinationPath[4..];
@@ -358,6 +350,14 @@ namespace MobilePackageGen
                 DestinationPath = Path.Combine($"UNC", UNCLessPath);
             }
 
+            if (DestinationPath[1] == ':')
+            {
+                string DriveLetter = DestinationPath[0].ToString().ToUpper();
+                string DriveLetterLessPath = DestinationPath[3..];
+
+                DestinationPath = Path.Combine($"Drive{DriveLetter}", DriveLetterLessPath);
+            }
+            
             return DestinationPath;
         }
 
