@@ -191,59 +191,28 @@ namespace MobilePackageGen
                         {
                             // PreInstalled Partition
                             // Extracted APPX, Licenses
-
-                            string[] LicenseFiles = [.. fileSystem.GetFiles("AppData", "*.xml", SearchOption.TopDirectoryOnly)];
-
-                            foreach (string LicenseFile in LicenseFiles)
+                            if (fileSystem.DirectoryExists("AppData") && fileSystem.DirectoryExists("WindowsApps"))
                             {
-                                Logging.Log($"Extracting {Path.GetFileNameWithoutExtension(LicenseFile)} license file...");
+                                string[] LicenseFiles = [.. fileSystem.GetFiles("AppData", "*.xml", SearchOption.TopDirectoryOnly)];
 
-                                string destFolder = Path.Combine(destination_path, "PreInstalled", "Licenses");
-
-                                if (!Directory.Exists(destFolder))
+                                foreach (string LicenseFile in LicenseFiles)
                                 {
-                                    Directory.CreateDirectory(destFolder);
-                                }
+                                    Logging.Log($"Extracting {Path.GetFileNameWithoutExtension(LicenseFile)} license file...");
 
-                                string destFile = Path.Combine(destFolder, Path.GetFileName(LicenseFile));
+                                    string destFolder = Path.Combine(destination_path, "PreInstalled", "Licenses");
 
-                                if (!File.Exists(destFile))
-                                {
-                                    using Stream PreInstalledFileStream = fileSystem.OpenFile(LicenseFile, FileMode.Open, FileAccess.Read);
-                                    FileAttributes Attributes = fileSystem.GetAttributes(LicenseFile) & ~FileAttributes.ReparsePoint;
-                                    DateTime LastWriteTime = fileSystem.GetLastWriteTime(LicenseFile);
-
-                                    using (Stream outputFile = File.Create(destFile))
-                                    {
-                                        PreInstalledFileStream.CopyTo(outputFile);
-                                    }
-
-                                    File.SetAttributes(destFile, Attributes);
-                                    File.SetLastWriteTime(destFile, LastWriteTime);
-                                }
-                            }
-
-                            string[] AppFolders = [.. fileSystem.GetDirectories("WindowsApps", "*", SearchOption.TopDirectoryOnly)];
-                            foreach (string AppFolder in AppFolders)
-                            {
-                                Logging.Log($"Extracting {Path.GetFileName(AppFolder)} app files...");
-
-                                string[] AppFiles = [.. fileSystem.GetFiles(AppFolder, "*", SearchOption.AllDirectories)];
-                                foreach (string AppFile in AppFiles)
-                                {
-                                    string destFolder = Path.Combine(destination_path, "PreInstalled", "Apps", string.Join("\\", AppFile[12..].Split("\\")[..^1]));
                                     if (!Directory.Exists(destFolder))
                                     {
                                         Directory.CreateDirectory(destFolder);
                                     }
 
-                                    string destFile = Path.Combine(destFolder, Path.GetFileName(AppFile));
+                                    string destFile = Path.Combine(destFolder, Path.GetFileName(LicenseFile));
 
                                     if (!File.Exists(destFile))
                                     {
-                                        using Stream PreInstalledFileStream = fileSystem.OpenFile(AppFile, FileMode.Open, FileAccess.Read);
-                                        FileAttributes Attributes = fileSystem.GetAttributes(AppFile) & ~FileAttributes.ReparsePoint;
-                                        DateTime LastWriteTime = fileSystem.GetLastWriteTime(AppFile);
+                                        using Stream PreInstalledFileStream = fileSystem.OpenFile(LicenseFile, FileMode.Open, FileAccess.Read);
+                                        FileAttributes Attributes = fileSystem.GetAttributes(LicenseFile) & ~FileAttributes.ReparsePoint;
+                                        DateTime LastWriteTime = fileSystem.GetLastWriteTime(LicenseFile);
 
                                         using (Stream outputFile = File.Create(destFile))
                                         {
@@ -252,6 +221,39 @@ namespace MobilePackageGen
 
                                         File.SetAttributes(destFile, Attributes);
                                         File.SetLastWriteTime(destFile, LastWriteTime);
+                                    }
+                                }
+
+                                string[] AppFolders = [.. fileSystem.GetDirectories("WindowsApps", "*", SearchOption.TopDirectoryOnly)];
+                                foreach (string AppFolder in AppFolders)
+                                {
+                                    Logging.Log($"Extracting {Path.GetFileName(AppFolder)} app files...");
+
+                                    string[] AppFiles = [.. fileSystem.GetFiles(AppFolder, "*", SearchOption.AllDirectories)];
+                                    foreach (string AppFile in AppFiles)
+                                    {
+                                        string destFolder = Path.Combine(destination_path, "PreInstalled", "Apps", string.Join("\\", AppFile[12..].Split("\\")[..^1]));
+                                        if (!Directory.Exists(destFolder))
+                                        {
+                                            Directory.CreateDirectory(destFolder);
+                                        }
+
+                                        string destFile = Path.Combine(destFolder, Path.GetFileName(AppFile));
+
+                                        if (!File.Exists(destFile))
+                                        {
+                                            using Stream PreInstalledFileStream = fileSystem.OpenFile(AppFile, FileMode.Open, FileAccess.Read);
+                                            FileAttributes Attributes = fileSystem.GetAttributes(AppFile) & ~FileAttributes.ReparsePoint;
+                                            DateTime LastWriteTime = fileSystem.GetLastWriteTime(AppFile);
+
+                                            using (Stream outputFile = File.Create(destFile))
+                                            {
+                                                PreInstalledFileStream.CopyTo(outputFile);
+                                            }
+
+                                            File.SetAttributes(destFile, Attributes);
+                                            File.SetLastWriteTime(destFile, LastWriteTime);
+                                        }
                                     }
                                 }
                             }
