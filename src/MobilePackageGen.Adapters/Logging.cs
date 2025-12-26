@@ -74,7 +74,7 @@ namespace MobilePackageGen
             Log($"{GetDISMLikeProgressBar(ProgressPercentage)} {remaining:hh\\:mm\\:ss\\.f}", severity: level, returnLine: false);
         }
 
-        public static string GetDISMLikeProgressBar(uint percentage)
+        public static string GetDISMLikeProgressBar(double percentage)
         {
             if (percentage > 100)
             {
@@ -85,7 +85,7 @@ namespace MobilePackageGen
 
             string bases = $"{new string('=', eqsLength)}{new string(' ', 55 - eqsLength)}";
 
-            bases = bases.Insert(28, percentage + "%");
+            bases = bases.Insert(28, $"{percentage:0.00}%");
 
             if (percentage == 100)
             {

@@ -24,14 +24,14 @@ namespace MobilePackageGen
 
             int i = 0;
 
-            uint oldPercentage = uint.MaxValue;
+            double oldPercentage = uint.MaxValue;
 
             bool hasSeenManifest = false;
             bool hasSeenCatalog = false;
 
             foreach (XmlDsm.FileEntry packageFile in dsm.Files.FileEntry)
             {
-                uint percentage = (uint)Math.Floor((double)i++ * 50 / dsm.Files.FileEntry.Count);
+                double percentage = (double)i++ * 50 / dsm.Files.FileEntry.Count;
 
                 if (percentage != oldPercentage)
                 {

@@ -179,7 +179,7 @@ namespace MobilePackageGen
                 }
 
                 Logging.Log(componentStatus);
-                string progressBarString = Logging.GetDISMLikeProgressBar((uint)Math.Round(i * 100d / packagesCount));
+                string progressBarString = Logging.GetDISMLikeProgressBar(i * 100d / packagesCount);
                 Logging.Log(progressBarString, returnLine: false);
 
                 string fileStatus = "";

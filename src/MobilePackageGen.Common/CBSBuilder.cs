@@ -26,13 +26,13 @@ namespace MobilePackageGen
 
             int i = 0;
 
-            uint oldPercentage = uint.MaxValue;
+            double oldPercentage = uint.MaxValue;
 
             if (cbs.Package.CustomInformation != null)
             {
                 foreach (XmlMum.File packageFile in cbs.Package.CustomInformation.File)
                 {
-                    uint percentage = (uint)Math.Floor((double)i++ * 50 / cbs.Package.CustomInformation.File.Count);
+                    double percentage = (double)i++ * 50 / cbs.Package.CustomInformation.File.Count;
 
                     if (percentage != oldPercentage)
                     {

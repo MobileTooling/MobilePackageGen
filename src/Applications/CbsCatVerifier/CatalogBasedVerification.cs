@@ -62,11 +62,11 @@ namespace CbsCatVerifier
             string tempDirectory = Path.GetTempFileName();
             File.Delete(tempDirectory);
 
-            uint oldPercentage = uint.MaxValue;
+            double oldPercentage = uint.MaxValue;
 
             Cabinet.CabinetExtractor.ExtractCabinet(cabFile, tempDirectory, (int progress, string file) =>
             {
-                uint newPercentage = (uint)progress;
+                double newPercentage = (uint)progress;
 
                 if (newPercentage != oldPercentage)
                 {
@@ -101,7 +101,7 @@ namespace CbsCatVerifier
             {
                 Cabinet.CabinetFile file = filesInCabinet[i];
 
-                uint newPercentage = (uint)Math.Floor((double)(i + 1) * 100 / filesInCabinet.Length);
+                double newPercentage = (double)(i + 1) * 100 / filesInCabinet.Length;
 
                 if (newPercentage != oldPercentage)
                 {
@@ -169,7 +169,7 @@ namespace CbsCatVerifier
             {
                 KeyValuePair<string, string> cs = hashedPackageArray[i];
 
-                string progressString = $"\r{GetDISMLikeProgressBar((uint)Math.Floor((double)(i + 1) * 100 / hashedPackageArray.Length))}";
+                string progressString = $"\r{GetDISMLikeProgressBar((double)(i + 1) * 100 / hashedPackageArray.Length)}";
 
                 Console.ForegroundColor = backupForeground;
                 Console.Write(progressString);
@@ -374,7 +374,7 @@ namespace CbsCatVerifier
             Console.ForegroundColor = backupForeground;
         }
 
-        public static string GetDISMLikeProgressBar(uint percentage)
+        public static string GetDISMLikeProgressBar(double percentage)
         {
             if (percentage > 100)
             {
@@ -385,7 +385,7 @@ namespace CbsCatVerifier
 
             string bases = $"{new string('=', eqsLength)}{new string(' ', 55 - eqsLength)}";
 
-            bases = bases.Insert(28, percentage + "%");
+            bases = bases.Insert(28, $"{percentage:0.00}%");
 
             if (percentage == 100)
             {

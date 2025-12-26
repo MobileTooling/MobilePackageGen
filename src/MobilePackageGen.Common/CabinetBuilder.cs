@@ -7,8 +7,8 @@ namespace MobilePackageGen
     {
         public static void BuildCab(string cabFile, IEnumerable<CabinetFileInfo> fileMappings, ref string fileStatus)
         {
-            uint oldPercentage = uint.MaxValue;
-            uint oldFilePercentage = uint.MaxValue;
+            double oldPercentage = uint.MaxValue;
+            double oldFilePercentage = uint.MaxValue;
             string oldFileName = "";
 
             string lambdaFileStatus = fileStatus;
@@ -26,7 +26,7 @@ namespace MobilePackageGen
                     fileNameParsed = archiveProgressEventArgs.CurrentFileName;
                 }
 
-                uint percentage = (uint)Math.Floor((double)archiveProgressEventArgs.CurrentFileNumber * 50 / archiveProgressEventArgs.TotalFiles) + 50;
+                double percentage = ((double)archiveProgressEventArgs.CurrentFileNumber * 50 / archiveProgressEventArgs.TotalFiles) + 50;
 
                 if (percentage != oldPercentage)
                 {
@@ -61,7 +61,7 @@ namespace MobilePackageGen
                     Console.SetCursorPosition(0, Console.CursorTop - 2);
                 }
 
-                uint filePercentage = (uint)Math.Floor((double)archiveProgressEventArgs.CurrentFileBytesProcessed * 100 / archiveProgressEventArgs.CurrentFileTotalBytes);
+                double filePercentage = (double)archiveProgressEventArgs.CurrentFileBytesProcessed * 100 / archiveProgressEventArgs.CurrentFileTotalBytes;
 
                 if (filePercentage != oldFilePercentage)
                 {
