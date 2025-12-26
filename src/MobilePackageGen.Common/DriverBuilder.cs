@@ -73,13 +73,13 @@ namespace MobilePackageGen
             return count;
         }
 
-        private static List<CabinetFileInfo> GetCabinetFileInfoForCbsPackage(string inf, IPartition partition)
+        private static List<CabinetFileInfo> GetCabinetFileInfoForCbsPackage(string driverFolder, IPartition partition)
         {
             List<CabinetFileInfo> fileMappings = [];
 
             IFileSystem fileSystem = partition.FileSystem!;
 
-            foreach (string entry in fileSystem.GetFiles(inf, "*", SearchOption.AllDirectories))
+            foreach (string entry in fileSystem.GetFiles(driverFolder, "*", SearchOption.AllDirectories))
             {
                 if (fileSystem.DirectoryExists(entry))
                 {
@@ -147,32 +147,42 @@ namespace MobilePackageGen
 
                         string fileStatus = "";
 
-                        if (!File.Exists(cabFile))
+                        // Trim fileName from output
+                        string DestinationFolder = Path.GetDirectoryName(cabFile)!;
+
+                        if (!Directory.Exists(DestinationFolder))
                         {
                             IEnumerable<CabinetFileInfo> fileMappings = GetCabinetFileInfoForCbsPackage(folder, partition);
 
-                            // Cab Creation is only supported on Windows
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (fileMappings.Any())
                             {
-                                if (fileMappings.Any())
+                                if (Path.GetDirectoryName(cabFile) is string directory && !Directory.Exists(directory))
                                 {
-                                    if (Path.GetDirectoryName(cabFile) is string directory && !Directory.Exists(directory))
+                                    Directory.CreateDirectory(directory);
+                                }
+
+                                foreach (CabinetFileInfo fileMapping in fileMappings)
+                                {
+                                    string fileDestinationPath = Path.Combine(DestinationFolder, fileMapping.FileName);
+                                    string? fileRootPath = Path.GetDirectoryName(fileDestinationPath)!;
+
+                                    if (!Directory.Exists(fileRootPath))
                                     {
-                                        Directory.CreateDirectory(directory);
+                                        Directory.CreateDirectory(fileRootPath);
                                     }
 
-                                    CabinetBuilder.BuildCab(cabFile, fileMappings, ref fileStatus);
-                                }
-                            }
+                                    using FileStream fileStream = new(fileDestinationPath, FileMode.Create);
+                                    fileMapping.FileStream.CopyTo(fileStream);
+                                    fileMapping.FileStream.Close();
 
-                            foreach (CabinetFileInfo fileMapping in fileMappings)
-                            {
-                                fileMapping.FileStream.Close();
+                                    File.SetAttributes(fileDestinationPath, fileMapping.Attributes);
+                                    File.SetLastWriteTimeUtc(fileDestinationPath, fileMapping.DateTime);
+                                }
                             }
                         }
                         else
                         {
-                            Logging.Log($"CAB already exists! Skipping. {cabFile}", LoggingLevel.Warning);
+                            Logging.Log($"Driver already exists! Skipping. {DestinationFolder}", LoggingLevel.Warning);
                         }
 
                         if (i != packagesCount - 1)
