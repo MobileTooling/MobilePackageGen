@@ -1,14 +1,10 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Playground
+﻿namespace Playground
 {
-    internal static class Program
+    internal class Program
     {
         public static int Main(string[] args)
         {
-            string cabFile = args[0];
-
-            return CatalogBasedVerification.CatalogBasedVerifier(cabFile);
+            return 0;
         }
     }
 }

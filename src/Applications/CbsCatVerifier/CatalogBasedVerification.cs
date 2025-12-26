@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Playground
+namespace CbsCatVerifier
 {
     internal class CatalogBasedVerification
     {

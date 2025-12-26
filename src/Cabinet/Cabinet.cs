@@ -386,6 +386,7 @@ namespace Cabinet
                 string destination = Path.Combine(OutputDirectory, file.FileName);
                 if (!Directory.Exists(Path.GetDirectoryName(destination)))
                 {
+                    progressCallBack?.Invoke(0, $"Creating directory {Path.GetDirectoryName(destination)}");
                     _ = Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 }
 

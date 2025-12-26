@@ -2,7 +2,7 @@
 
 // https://raw.githubusercontent.com/arul-gupta/CatalogAPI/master/CatalogAPI/CatalogAPI/CatalogFunctions.cs
 
-namespace Playground
+namespace CbsCatVerifier
 {
     internal static class CatalogManager
     {

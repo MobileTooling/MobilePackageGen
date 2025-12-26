@@ -2,7 +2,7 @@
 
 // https://raw.githubusercontent.com/arul-gupta/CatalogAPI/master/CatalogAPI/CatalogAPI/CatalogFunctions.cs
 
-namespace Playground
+namespace CbsCatVerifier
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct CRYPTOAPI_BLOB

@@ -167,6 +167,9 @@ namespace MobilePackageGen
             string[] AppFolders = [.. fileSystem.GetDirectories("WindowsApps", "*", SearchOption.TopDirectoryOnly)];
             foreach (string AppFolder in AppFolders)
             {
+                if (Path.GetFileName(AppFolder).Equals("deleted", StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
                 // --------------------------
 
                 string componentStatus = $"Creating package {i + 1} of {packagesCount} - {Path.GetFileName(AppFolder)}";
