@@ -12,6 +12,11 @@ namespace RemakeAppx
     {
         public static async Task MakeAppx(string inputFolder, string outputFile, bool bundleMode, bool unsignedMode)
         {
+            if (File.Exists(outputFile))
+            {
+                return;
+            }
+
             FileSystem fs = new();
             var directoryInfo = fs.DirectoryInfo.New(inputFolder);
             var directoryContainer = new DirectoryContainer(directoryInfo);

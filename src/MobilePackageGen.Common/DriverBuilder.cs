@@ -150,39 +150,32 @@ namespace MobilePackageGen
                         // Trim fileName from output
                         string DestinationFolder = Path.GetDirectoryName(cabFile)!;
 
-                        if (!Directory.Exists(DestinationFolder))
-                        {
-                            IEnumerable<CabinetFileInfo> fileMappings = GetCabinetFileInfoForCbsPackage(folder, partition);
+                        IEnumerable<CabinetFileInfo> fileMappings = GetCabinetFileInfoForCbsPackage(folder, partition);
 
-                            if (fileMappings.Any())
+                        if (fileMappings.Any())
+                        {
+                            if (Path.GetDirectoryName(cabFile) is string directory && !Directory.Exists(directory))
                             {
-                                if (Path.GetDirectoryName(cabFile) is string directory && !Directory.Exists(directory))
-                                {
-                                    Directory.CreateDirectory(directory);
-                                }
-
-                                foreach (CabinetFileInfo fileMapping in fileMappings)
-                                {
-                                    string fileDestinationPath = Path.Combine(DestinationFolder, fileMapping.FileName);
-                                    string? fileRootPath = Path.GetDirectoryName(fileDestinationPath)!;
-
-                                    if (!Directory.Exists(fileRootPath))
-                                    {
-                                        Directory.CreateDirectory(fileRootPath);
-                                    }
-
-                                    using FileStream fileStream = new(fileDestinationPath, FileMode.Create);
-                                    fileMapping.FileStream.CopyTo(fileStream);
-                                    fileMapping.FileStream.Close();
-
-                                    File.SetAttributes(fileDestinationPath, fileMapping.Attributes);
-                                    File.SetLastWriteTimeUtc(fileDestinationPath, fileMapping.DateTime);
-                                }
+                                Directory.CreateDirectory(directory);
                             }
-                        }
-                        else
-                        {
-                            Logging.Log($"Driver already exists! Skipping. {DestinationFolder}", LoggingLevel.Warning);
+
+                            foreach (CabinetFileInfo fileMapping in fileMappings)
+                            {
+                                string fileDestinationPath = Path.Combine(DestinationFolder, fileMapping.FileName);
+                                string? fileRootPath = Path.GetDirectoryName(fileDestinationPath)!;
+
+                                if (!Directory.Exists(fileRootPath))
+                                {
+                                    Directory.CreateDirectory(fileRootPath);
+                                }
+
+                                using FileStream fileStream = new(fileDestinationPath, FileMode.Create);
+                                fileMapping.FileStream.CopyTo(fileStream);
+                                fileMapping.FileStream.Close();
+
+                                File.SetAttributes(fileDestinationPath, fileMapping.Attributes);
+                                File.SetLastWriteTimeUtc(fileDestinationPath, fileMapping.DateTime);
+                            }
                         }
 
                         if (i != packagesCount - 1)

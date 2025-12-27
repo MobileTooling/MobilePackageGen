@@ -102,7 +102,7 @@ namespace MobilePackageGen.Adapters
         {
             List<(GPT.GPT.Partition, Stream)> partitions = [];
 
-            int sectorSize = 4096;//virtualDisk.Geometry!.Value.BytesPerSector;
+            int sectorSize = virtualDisk.Geometry!.Value.BytesPerSector;
 
             IEnumerable<GPT.GPT.Partition> partitionTable = GetGPTPartitions(virtualDisk.Content, (uint)sectorSize);
 
