@@ -408,12 +408,12 @@ namespace MobilePackageGen
                 {
                     foreach (UpdateHistory.Package Package in UpdateEvent.UpdateOSOutput.Packages.Package)
                     {
-                        if (Package.PackageFile.EndsWith(".mum", StringComparison.InvariantCultureIgnoreCase))
+                        if (Package.PackageIdentity == null || Package.PackageFile == null)
                         {
                             continue;
                         }
-
-                        if (Package.PackageIdentity == null)
+                        
+                        if (Package.PackageFile.EndsWith(".mum", StringComparison.InvariantCultureIgnoreCase))
                         {
                             continue;
                         }
@@ -468,6 +468,11 @@ namespace MobilePackageGen
                 {
                     foreach (UpdateHistory.Package Package in UpdateEvent.UpdateOSOutput.Packages.Package)
                     {
+                        if (Package.PackageFile == null)
+                        {
+                            continue;
+                        }
+                        
                         if (Package.PackageFile.EndsWith(".mum", StringComparison.InvariantCultureIgnoreCase))
                         {
                             continue;
